@@ -1,13 +1,16 @@
 import time
 
-from PyQt6.QtGui import QAction, QIcon
-from PyQt6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
+from PyQt6.QtCore import QTimer
+from PyQt6.QtGui import QAction
+from PyQt6.QtWidgets import QApplication, QMenu, QPushButton, QSystemTrayIcon
 from qfluentwidgets import FluentIcon, FluentWindow, InfoBar, InfoBarPosition, NavigationItemPosition
 
+from . import __version__
 from .config import cfg
 from .database import Database, day_bounds
-from .i18n import tr
+from .i18n import category_label, tr
 from .tracker import Tracker
+from .updater import Updater, run_installer_and_exit
 from .views.apps_page import AppsPage
 from .views.dashboard import DashboardPage
 from .views.goals_page import GoalsPage
@@ -63,6 +66,7 @@ class MainWindow(FluentWindow):
         self.tracker.start()
 
         self._init_tray()
+        self._init_updater()
 
     def _init_tray(self):
         self.tray = QSystemTrayIcon(FluentIcon.STOP_WATCH.icon(), self)
@@ -81,6 +85,55 @@ class MainWindow(FluentWindow):
             else None
         )
         self.tray.show()
+
+    def _init_updater(self):
+        self.updater = Updater(self)
+        self.updater.update_available.connect(self._on_update_available)
+        self.updater.download_done.connect(run_installer_and_exit)
+        self.updater.download_failed.connect(
+            lambda: InfoBar.error(
+                tr("updates"), tr("update_failed"),
+                position=InfoBarPosition.BOTTOM_RIGHT, parent=self,
+            )
+        )
+        self._manual_check = False
+        self.settingsPage.check_updates_clicked.connect(self._manual_update_check)
+        self.updater.check()
+
+    def _manual_update_check(self):
+        self._manual_check = True
+        self._update_found = False
+        self.updater.check()
+        QTimer.singleShot(
+            12000,
+            lambda: (
+                InfoBar.success(
+                    tr("updates"), tr("no_updates"),
+                    position=InfoBarPosition.BOTTOM_RIGHT, parent=self,
+                )
+                if self._manual_check and not self._update_found
+                else None
+            ),
+        )
+
+    def _on_update_available(self, version: str, url: str):
+        self._update_found = True
+        bar = InfoBar.info(
+            tr("updates"), tr("update_available", v=version),
+            position=InfoBarPosition.BOTTOM_RIGHT, duration=-1, parent=self,
+        )
+        btn = QPushButton(tr("update_now"))
+
+        def start_download():
+            bar.close()
+            InfoBar.info(
+                tr("updates"), tr("downloading_update"),
+                position=InfoBarPosition.BOTTOM_RIGHT, duration=5000, parent=self,
+            )
+            self.updater.download(url)
+
+        btn.clicked.connect(start_download)
+        bar.addWidget(btn)
 
     def _on_segment(self, app: str, title: str, start: float, duration: float):
         self.db.add_activity(app, title, start, duration)
@@ -115,8 +168,6 @@ class MainWindow(FluentWindow):
             spent_min = int(cats.get(category, 0.0) // 60)
             if spent_min >= minutes:
                 self._goal_notified.add(goal_id)
-                from .i18n import category_label
-
                 self._notify(tr("app_title"), tr("goal_reached", cat=category_label(category), m=minutes))
 
     def _on_phase_finished(self, phase: str):

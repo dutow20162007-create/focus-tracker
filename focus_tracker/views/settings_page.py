@@ -19,6 +19,7 @@ from qfluentwidgets import (
     setTheme,
 )
 
+from .. import __version__
 from ..config import cfg
 from ..database import Database, day_bounds
 from ..i18n import tr
@@ -26,6 +27,7 @@ from ..i18n import tr
 
 class SettingsPage(ScrollArea):
     theme_changed = pyqtSignal()
+    check_updates_clicked = pyqtSignal()
 
     def __init__(self, db: Database, parent=None):
         super().__init__(parent)
@@ -136,7 +138,19 @@ class SettingsPage(ScrollArea):
         data.addSettingCard(self.exportCard)
         data.addSettingCard(self.clearCard)
 
-        for group in (appearance, tracking, pomodoro, notifications, general, data):
+        # Updates
+        updates = SettingCardGroup(tr("updates"), self.scrollWidget)
+        self.updateCard = PushSettingCard(
+            tr("check_updates"),
+            FluentIcon.UPDATE,
+            tr("check_updates"),
+            f'{tr("version")}: {__version__}',
+            updates,
+        )
+        self.updateCard.clicked.connect(self.check_updates_clicked)
+        updates.addSettingCard(self.updateCard)
+
+        for group in (appearance, tracking, pomodoro, notifications, general, data, updates):
             self.expandLayout.addWidget(group)
         self.expandLayout.setContentsMargins(30, 10, 30, 10)
 

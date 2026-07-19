@@ -15,7 +15,7 @@ from PyQt6.QtWidgets import QFrame, QGridLayout, QHBoxLayout, QVBoxLayout, QWidg
 from qfluentwidgets import BodyLabel, CardWidget, StrongBodyLabel, SubtitleLabel, isDarkTheme
 
 from ..database import Database, day_bounds
-from ..i18n import fmt_duration, tr
+from ..i18n import category_label, fmt_duration, tr
 
 PRODUCTIVE_COLOR = QColor("#0ea47a")
 DISTRACTING_COLOR = QColor("#e0526f")
@@ -170,8 +170,6 @@ class DashboardPage(QWidget):
         total = sum(cats.values())
         if total:
             for cat, seconds in sorted(cats.items(), key=lambda x: -x[1]):
-                from ..i18n import category_label
-
                 sl = series.append(f"{category_label(cat)} ({fmt_duration(seconds)})", seconds)
                 sl.setColor(CAT_COLORS.get(cat, NEUTRAL_COLOR))
         else:
