@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⏱ Focus Tracker
+# dash focus-tracker
 
 **Трекер фокуса и времени для ПК в стиле Windows 11 (Fluent Design)**
 
@@ -11,6 +11,7 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
+<img src="assets/logo.png" width="120" alt="logo"><br><br>
 <img src="docs/screenshot-dark.png" width="49%" alt="Тёмная тема"> <img src="docs/screenshot-light.png" width="49%" alt="Светлая тема">
 
 </div>
@@ -19,12 +20,12 @@
 
 ## 📥 Установка
 
-Скачай **FocusTrackerSetup.exe** из [последнего релиза](https://github.com/dutow20162007-create/focus-tracker/releases/latest) и запусти. Установщик:
-- ставит приложение в `%LOCALAPPDATA%\FocusTracker` (без прав администратора);
+Скачай **DashFocusTrackerSetup.exe** из [последнего релиза](https://github.com/dutow20162007-create/focus-tracker/releases/latest) и запусти. Установщик:
+- ставит приложение в `%LOCALAPPDATA%\DashFocusTracker` (без прав администратора);
 - создаёт ярлыки на рабочем столе и в меню «Пуск»;
 - добавляет деинсталлятор в «Установку и удаление программ».
 
-Либо возьми портативный `FocusTracker.exe` оттуда же — он работает без установки.
+Либо возьми портативный `DashFocusTracker.exe` оттуда же — он работает без установки.
 
 ## ✨ Возможности
 
@@ -73,9 +74,9 @@ python main.py
 
 ## 🔨 Сборка
 
-**Локально (Windows):** запусти `build.bat` — соберёт `dist\FocusTracker.exe` через PyInstaller.
+**Локально (Windows):** запусти `build.bat` — соберёт `dist\DashFocusTracker.exe` через PyInstaller.
 
-**Установщик:** нужен [NSIS](https://nsis.sourceforge.io/): `makensis /DVERSION=1.0.0 installer.nsi` → `FocusTrackerSetup.exe`.
+**Установщик:** нужен [NSIS](https://nsis.sourceforge.io/): `makensis /DVERSION=1.2.0 installer.nsi` → `DashFocusTrackerSetup.exe`.
 
 **CI:** GitHub Actions собирает exe и установщик на каждый пуш в `main`. Пуш тега `v*` (например `v1.1.0`) автоматически создаёт релиз с файлами — и все установленные приложения предложат пользователям обновиться.
 

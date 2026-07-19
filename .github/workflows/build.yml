@@ -18,21 +18,21 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install -r requirements.txt pyinstaller
-      - run: python -m PyInstaller --noconfirm --windowed --onefile --name FocusTracker --collect-all qfluentwidgets --collect-all PyQt6 --hidden-import pkgutil --distpath dist-win main.py
+      - run: python -m PyInstaller --noconfirm --windowed --onefile --name DashFocusTracker --icon assets/logo.ico --add-data "assets;assets" --collect-all qfluentwidgets --collect-all PyQt6 --hidden-import pkgutil --distpath dist-win main.py
       - name: Build installer
         run: |
           choco install nsis -y --no-progress
           & "C:\Program Files (x86)\NSIS\makensis.exe" /DVERSION=${{ github.ref_type == 'tag' && github.ref_name || '1.0.0' }} installer.nsi
       - uses: actions/upload-artifact@v4
         with:
-          name: FocusTracker
+          name: DashFocusTracker
           path: |
-            dist-win/FocusTracker.exe
-            FocusTrackerSetup.exe
+            dist-win/DashFocusTracker.exe
+            DashFocusTrackerSetup.exe
       - name: Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist-win/FocusTracker.exe
-            FocusTrackerSetup.exe
+            dist-win/DashFocusTracker.exe
+            DashFocusTrackerSetup.exe

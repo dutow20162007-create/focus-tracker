@@ -1,7 +1,7 @@
 import time
 
 from PyQt6.QtCore import QTimer
-from PyQt6.QtGui import QAction
+from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QApplication, QMenu, QPushButton, QSystemTrayIcon
 from qfluentwidgets import FluentIcon, FluentWindow, InfoBar, InfoBarPosition, NavigationItemPosition
 
@@ -9,6 +9,7 @@ from . import __version__
 from .config import cfg
 from .database import Database, day_bounds
 from .i18n import category_label, tr
+from .resources import resource_path
 from .tracker import Tracker
 from .updater import Updater, run_installer_and_exit
 from .views.apps_page import AppsPage
@@ -23,7 +24,7 @@ class MainWindow(FluentWindow):
         super().__init__()
         self.setWindowTitle(tr("app_title"))
         self.resize(1100, 720)
-        self.setWindowIcon(FluentIcon.STOP_WATCH.icon())
+        self.setWindowIcon(QIcon(resource_path("logo.png")))
 
         self.db = Database()
         self._distraction_notified = False
@@ -70,7 +71,7 @@ class MainWindow(FluentWindow):
         self._init_updater()
 
     def _init_tray(self):
-        self.tray = QSystemTrayIcon(FluentIcon.STOP_WATCH.icon(), self)
+        self.tray = QSystemTrayIcon(QIcon(resource_path("logo.png")), self)
         menu = QMenu()
         showAction = QAction(tr("show"), menu)
         showAction.triggered.connect(self.showNormal)

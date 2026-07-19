@@ -1,6 +1,6 @@
 STRINGS = {
     "ru": {
-        "app_title": "Focus Tracker",
+        "app_title": "dash focus-tracker",
         "dashboard": "Обзор",
         "apps": "Приложения",
         "pomodoro": "Помодоро",
@@ -81,7 +81,7 @@ STRINGS = {
         "top_apps": "Топ приложений",
     },
     "en": {
-        "app_title": "Focus Tracker",
+        "app_title": "dash focus-tracker",
         "dashboard": "Dashboard",
         "apps": "Applications",
         "pomodoro": "Pomodoro",

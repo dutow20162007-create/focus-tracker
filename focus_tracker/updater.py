@@ -57,7 +57,7 @@ class UpdateDownloader(QObject):
 
     def run(self):
         try:
-            path = os.path.join(tempfile.gettempdir(), "FocusTrackerSetup.exe")
+            path = os.path.join(tempfile.gettempdir(), "DashFocusTrackerSetup.exe")
             with urllib.request.urlopen(self.url, timeout=30) as resp, open(path, "wb") as f:
                 total = int(resp.headers.get("Content-Length") or 0)
                 read = 0

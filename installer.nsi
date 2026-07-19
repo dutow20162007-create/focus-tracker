@@ -1,15 +1,16 @@
-!define APP_NAME "Focus Tracker"
-!define EXE_NAME "FocusTracker.exe"
+!define APP_NAME "dash focus-tracker"
+!define EXE_NAME "DashFocusTracker.exe"
 !ifndef VERSION
-  !define VERSION "1.0.0"
+  !define VERSION "1.2.0"
 !endif
 
 Name "${APP_NAME}"
-OutFile "FocusTrackerSetup.exe"
-InstallDir "$LOCALAPPDATA\FocusTracker"
+OutFile "DashFocusTrackerSetup.exe"
+InstallDir "$LOCALAPPDATA\DashFocusTracker"
 RequestExecutionLevel user
 Unicode true
 SetCompressor /SOLID lzma
+Icon "assets\logo.ico"
 
 Page directory
 Page instfiles
@@ -20,9 +21,9 @@ Section "Install"
   CreateShortcut "$SMPROGRAMS\${APP_NAME}.lnk" "$INSTDIR\${EXE_NAME}"
   CreateShortcut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${EXE_NAME}"
   WriteUninstaller "$INSTDIR\Uninstall.exe"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\FocusTracker" "DisplayName" "${APP_NAME}"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\FocusTracker" "DisplayVersion" "${VERSION}"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\FocusTracker" "UninstallString" "$INSTDIR\Uninstall.exe"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\DashFocusTracker" "DisplayName" "${APP_NAME}"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\DashFocusTracker" "DisplayVersion" "${VERSION}"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\DashFocusTracker" "UninstallString" "$INSTDIR\Uninstall.exe"
   Exec '"$INSTDIR\${EXE_NAME}"'
 SectionEnd
 
@@ -32,5 +33,5 @@ Section "Uninstall"
   Delete "$SMPROGRAMS\${APP_NAME}.lnk"
   Delete "$DESKTOP\${APP_NAME}.lnk"
   RMDir "$INSTDIR"
-  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\FocusTracker"
+  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\DashFocusTracker"
 SectionEnd
