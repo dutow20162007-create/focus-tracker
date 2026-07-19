@@ -14,6 +14,7 @@ from PyQt6.QtGui import QColor, QPainter
 from PyQt6.QtWidgets import QFrame, QGridLayout, QHBoxLayout, QVBoxLayout, QWidget
 from qfluentwidgets import BodyLabel, CardWidget, StrongBodyLabel, SubtitleLabel, isDarkTheme
 
+from ..app_icons import get_app_icon
 from ..database import Database, day_bounds
 from ..i18n import category_label, fmt_duration, tr
 
@@ -61,8 +62,14 @@ class DashboardPage(QWidget):
         root.setContentsMargins(30, 20, 30, 20)
         root.setSpacing(16)
 
+        currentRow = QHBoxLayout()
+        currentRow.setSpacing(8)
+        self.currentIcon = BodyLabel(self)
+        self.currentIcon.setFixedSize(20, 20)
         self.currentLabel = BodyLabel("", self)
-        root.addWidget(self.currentLabel)
+        currentRow.addWidget(self.currentIcon)
+        currentRow.addWidget(self.currentLabel, 1)
+        root.addLayout(currentRow)
 
         grid = QGridLayout()
         grid.setSpacing(12)
@@ -99,6 +106,15 @@ class DashboardPage(QWidget):
         pieLayout.addWidget(self.pieView)
         charts.addWidget(pieCard, 2)
 
+        topCard = CardWidget(self)
+        topLayout = QVBoxLayout(topCard)
+        topLayout.addWidget(StrongBodyLabel(tr("top_apps"), topCard))
+        self.topAppsLayout = QVBoxLayout()
+        self.topAppsLayout.setSpacing(8)
+        topLayout.addLayout(self.topAppsLayout)
+        topLayout.addStretch(1)
+        charts.addWidget(topCard, 2)
+
         root.addLayout(charts, 1)
 
         self.refresh()
@@ -108,6 +124,8 @@ class DashboardPage(QWidget):
 
     def set_current(self, app: str, title: str, seconds: float):
         if app:
+            icon = get_app_icon(app, self.db.get_app_paths().get(app, ""))
+            self.currentIcon.setPixmap(icon.pixmap(20, 20))
             self.currentLabel.setText(
                 f'{tr("current_app")}: {app} — {title[:60]} ({fmt_duration(seconds)})'
             )
@@ -126,6 +144,7 @@ class DashboardPage(QWidget):
         self.scoreCard.setValue(score)
         self._update_bar_chart()
         self._update_pie_chart(cats)
+        self._update_top_apps(start)
 
     def _update_bar_chart(self):
         self.barChart.removeAllSeries()
@@ -178,3 +197,33 @@ class DashboardPage(QWidget):
         series.setHoleSize(0.4)
         self.pieChart.addSeries(series)
         _style_chart(self.pieChart)
+
+    def _update_top_apps(self, start_ts: float):
+        while self.topAppsLayout.count():
+            item = self.topAppsLayout.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
+            elif item.layout():
+                sub = item.layout()
+                while sub.count():
+                    w = sub.takeAt(0)
+                    if w.widget():
+                        w.widget().deleteLater()
+                sub.deleteLater()
+        rows = self.db.totals_by_app(start_ts, time.time())[:5]
+        paths = self.db.get_app_paths()
+        for app, cat, total in rows:
+            row = QHBoxLayout()
+            row.setSpacing(8)
+            iconLabel = BodyLabel(self)
+            iconLabel.setFixedSize(20, 20)
+            iconLabel.setPixmap(get_app_icon(app, paths.get(app, "")).pixmap(20, 20))
+            nameLabel = BodyLabel(app, self)
+            timeLabel = BodyLabel(fmt_duration(total), self)
+            timeLabel.setStyleSheet("color: gray")
+            row.addWidget(iconLabel)
+            row.addWidget(nameLabel, 1)
+            row.addWidget(timeLabel)
+            self.topAppsLayout.addLayout(row)
+        if not rows:
+            self.topAppsLayout.addWidget(BodyLabel("—", self))

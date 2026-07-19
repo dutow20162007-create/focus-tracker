@@ -4,6 +4,7 @@ from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtWidgets import QHBoxLayout, QTableWidgetItem, QVBoxLayout, QWidget
 from qfluentwidgets import BodyLabel, ComboBox, SegmentedWidget, TableWidget
 
+from ..app_icons import get_app_icon
 from ..database import Database, day_bounds, week_bounds
 from ..i18n import category_label, fmt_duration, tr
 
@@ -68,9 +69,10 @@ class AppsPage(QWidget):
         selected = self._selected_app()
         start, end = self._bounds()
         rows = self.db.totals_by_app(start, end)
+        paths = self.db.get_app_paths()
         self.table.setRowCount(len(rows))
         for i, (app, cat, total) in enumerate(rows):
-            appItem = QTableWidgetItem(app)
+            appItem = QTableWidgetItem(get_app_icon(app, paths.get(app, "")), app)
             appItem.setData(Qt.ItemDataRole.UserRole, app)
             self.table.setItem(i, 0, appItem)
             self.table.setItem(i, 1, QTableWidgetItem(category_label(cat)))

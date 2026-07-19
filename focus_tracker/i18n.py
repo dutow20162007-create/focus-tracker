@@ -78,6 +78,7 @@ STRINGS = {
         "downloading_update": "Скачиваю обновление...",
         "update_failed": "Не удалось скачать обновление",
         "no_updates": "У тебя последняя версия",
+        "top_apps": "Топ приложений",
     },
     "en": {
         "app_title": "Focus Tracker",
@@ -158,6 +159,7 @@ STRINGS = {
         "downloading_update": "Downloading update...",
         "update_failed": "Failed to download update",
         "no_updates": "You're on the latest version",
+        "top_apps": "Top apps",
     },
 }
 

@@ -53,6 +53,7 @@ class MainWindow(FluentWindow):
         self.tracker.worker.idle_threshold = cfg.idleThreshold.value * 60
         self.tracker.worker.set_paused(not cfg.trackingEnabled.value)
         self.tracker.worker.segment_finished.connect(self._on_segment)
+        self.tracker.worker.app_path_discovered.connect(self.db.set_app_path)
         self.tracker.worker.current_changed.connect(self.dashboard.set_current)
         cfg.trackingEnabled.valueChanged.connect(
             lambda v: self.tracker.worker.set_paused(not v)

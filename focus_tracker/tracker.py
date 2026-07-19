@@ -5,8 +5,8 @@ import time
 from PyQt6.QtCore import QObject, QThread, pyqtSignal
 
 
-def get_active_window() -> tuple[str, str]:
-    """Returns (app_name, window_title) of the currently focused window."""
+def get_active_window() -> tuple[str, str, str]:
+    """Returns (app_name, window_title, exe_path) of the currently focused window."""
     if sys.platform == "win32":
         return _active_window_windows()
     if sys.platform == "darwin":
@@ -14,50 +14,54 @@ def get_active_window() -> tuple[str, str]:
     return _active_window_linux()
 
 
-def _active_window_windows() -> tuple[str, str]:
+def _active_window_windows() -> tuple[str, str, str]:
     import ctypes
     import ctypes.wintypes
 
     user32 = ctypes.windll.user32
     hwnd = user32.GetForegroundWindow()
     if not hwnd:
-        return "", ""
+        return "", "", ""
     length = user32.GetWindowTextLengthW(hwnd)
     buf = ctypes.create_unicode_buffer(length + 1)
     user32.GetWindowTextW(hwnd, buf, length + 1)
     pid = ctypes.wintypes.DWORD()
     user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
-    app = ""
+    app, exe = "", ""
     try:
         import psutil
 
-        app = psutil.Process(pid.value).name()
+        proc = psutil.Process(pid.value)
+        app = proc.name()
+        exe = proc.exe()
     except Exception:
         pass
-    return app, buf.value
+    return app, buf.value, exe
 
 
-def _active_window_mac() -> tuple[str, str]:
+def _active_window_mac() -> tuple[str, str, str]:
     script = 'tell application "System Events" to get name of first process whose frontmost is true'
     try:
         app = subprocess.check_output(["osascript", "-e", script], text=True, timeout=2).strip()
-        return app, app
+        return app, app, ""
     except Exception:
-        return "", ""
+        return "", "", ""
 
 
-def _active_window_linux() -> tuple[str, str]:
+def _active_window_linux() -> tuple[str, str, str]:
     try:
         out = subprocess.check_output(
             ["xprop", "-root", "_NET_ACTIVE_WINDOW"], text=True, timeout=2
         )
         win_id = out.strip().split()[-1]
         if win_id in ("0x0", "0x0."):
-            return "", ""
+            return "", "", ""
         out = subprocess.check_output(
-            ["xprop", "-id", win_id, "WM_CLASS", "_NET_WM_NAME"], text=True, timeout=2
+            ["xprop", "-id", win_id, "WM_CLASS", "_NET_WM_NAME", "_NET_WM_PID"],
+            text=True,
+            timeout=2,
         )
-        app, title = "", ""
+        app, title, exe = "", "", ""
         for line in out.splitlines():
             if line.startswith("WM_CLASS"):
                 parts = line.split('"')
@@ -67,9 +71,16 @@ def _active_window_linux() -> tuple[str, str]:
                 parts = line.split('"', 1)
                 if len(parts) == 2:
                     title = parts[1].rstrip('"')
-        return app, title
+            elif line.startswith("_NET_WM_PID"):
+                try:
+                    import psutil
+
+                    exe = psutil.Process(int(line.split()[-1])).exe()
+                except Exception:
+                    pass
+        return app, title, exe
     except Exception:
-        return "", ""
+        return "", "", ""
 
 
 def get_idle_seconds() -> float:
@@ -97,6 +108,7 @@ class TrackerWorker(QObject):
 
     segment_finished = pyqtSignal(str, str, float, float)  # app, title, start, duration
     current_changed = pyqtSignal(str, str, float)  # app, title, seconds on it
+    app_path_discovered = pyqtSignal(str, str)  # app, exe path
 
     def __init__(self, poll_interval: float = 2.0, idle_threshold: float = 180.0):
         super().__init__()
@@ -123,11 +135,13 @@ class TrackerWorker(QObject):
                 self._flush(cur_app, cur_title, cur_start)
                 cur_app, cur_title, cur_start = "", "", time.time()
                 continue
-            app, title = get_active_window()
+            app, title, exe = get_active_window()
             now = time.time()
             if app != cur_app or title != cur_title:
                 self._flush(cur_app, cur_title, cur_start)
                 cur_app, cur_title, cur_start = app, title, now
+                if app and exe:
+                    self.app_path_discovered.emit(app, exe)
             if cur_app:
                 self.current_changed.emit(cur_app, cur_title, now - cur_start)
         self._flush(cur_app, cur_title, cur_start)

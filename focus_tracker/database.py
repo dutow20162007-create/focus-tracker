@@ -23,7 +23,7 @@ class ActivityRow:
 class Database:
     def __init__(self, path: str = DB_PATH):
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        self.conn = sqlite3.connect(path)
+        self.conn = sqlite3.connect(path, check_same_thread=False)
         self.conn.execute(
             """CREATE TABLE IF NOT EXISTS activity (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,6 +37,12 @@ class Database:
             """CREATE TABLE IF NOT EXISTS categories (
                 app TEXT PRIMARY KEY,
                 category TEXT NOT NULL
+            )"""
+        )
+        self.conn.execute(
+            """CREATE TABLE IF NOT EXISTS app_paths (
+                app TEXT PRIMARY KEY,
+                path TEXT NOT NULL
             )"""
         )
         self.conn.execute(
@@ -65,6 +71,17 @@ class Database:
             (app, category),
         )
         self.conn.commit()
+
+    def set_app_path(self, app: str, path: str):
+        self.conn.execute(
+            "INSERT INTO app_paths (app, path) VALUES (?, ?) "
+            "ON CONFLICT(app) DO UPDATE SET path=excluded.path",
+            (app, path),
+        )
+        self.conn.commit()
+
+    def get_app_paths(self) -> dict:
+        return dict(self.conn.execute("SELECT app, path FROM app_paths").fetchall())
 
     def get_categories(self) -> dict:
         return dict(self.conn.execute("SELECT app, category FROM categories").fetchall())
