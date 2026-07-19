@@ -1,0 +1,176 @@
+STRINGS = {
+    "ru": {
+        "app_title": "Focus Tracker",
+        "dashboard": "Обзор",
+        "apps": "Приложения",
+        "pomodoro": "Помодоро",
+        "goals": "Цели",
+        "settings": "Настройки",
+        "today": "Сегодня",
+        "week": "Неделя",
+        "productive": "Продуктивно",
+        "distracting": "Отвлекает",
+        "neutral": "Нейтрально",
+        "total_time": "Всего за сегодня",
+        "productive_time": "Продуктивное время",
+        "distracting_time": "Отвлечения",
+        "focus_score": "Индекс фокуса",
+        "last_7_days": "Последние 7 дней",
+        "by_category": "По категориям",
+        "current_app": "Сейчас активно",
+        "app": "Приложение",
+        "category": "Категория",
+        "time": "Время",
+        "set_category": "Категория выбранного приложения",
+        "work": "Работа",
+        "break": "Перерыв",
+        "long_break": "Длинный перерыв",
+        "start": "Старт",
+        "pause": "Пауза",
+        "reset": "Сброс",
+        "round": "Раунд",
+        "work_done": "Раунд завершён! Время перерыва.",
+        "break_done": "Перерыв окончен! Возвращаемся к работе.",
+        "add_goal": "Добавить цель",
+        "goal_min": "не менее",
+        "goal_max": "не более",
+        "minutes_day": "мин/день",
+        "delete": "Удалить",
+        "appearance": "Внешний вид",
+        "theme": "Тема",
+        "theme_dark": "Тёмная",
+        "theme_light": "Светлая",
+        "language": "Язык",
+        "tracking": "Отслеживание",
+        "tracking_enabled": "Отслеживать активные окна",
+        "poll_interval": "Интервал опроса (сек)",
+        "idle_threshold": "Порог простоя (мин)",
+        "pomodoro_settings": "Помодоро",
+        "work_duration": "Длительность работы (мин)",
+        "break_duration": "Перерыв (мин)",
+        "long_break_duration": "Длинный перерыв (мин)",
+        "rounds": "Раундов до длинного перерыва",
+        "notifications": "Уведомления",
+        "notifications_enabled": "Показывать уведомления",
+        "distraction_alerts": "Предупреждать об отвлечениях",
+        "distraction_limit": "Лимит отвлечений (мин/день)",
+        "general": "Общие",
+        "autostart": "Запускать при старте системы",
+        "minimize_to_tray": "Сворачивать в трей при закрытии",
+        "data": "Данные",
+        "export_csv": "Экспорт в CSV",
+        "clear_data": "Очистить историю",
+        "clear_confirm": "Удалить всю историю активности? Это действие необратимо.",
+        "yes": "Да",
+        "cancel": "Отмена",
+        "exported": "Данные экспортированы",
+        "distraction_warning": "Ты отвлекаешься уже {m} мин сегодня. Пора вернуться к работе!",
+        "goal_reached": "Цель достигнута: {cat} — {m} мин!",
+        "restart_hint": "Изменения языка вступят в силу после перезапуска",
+        "show": "Показать",
+        "quit": "Выход",
+        "no_data": "Пока нет данных — поработай немного, и здесь появится статистика",
+    },
+    "en": {
+        "app_title": "Focus Tracker",
+        "dashboard": "Dashboard",
+        "apps": "Applications",
+        "pomodoro": "Pomodoro",
+        "goals": "Goals",
+        "settings": "Settings",
+        "today": "Today",
+        "week": "Week",
+        "productive": "Productive",
+        "distracting": "Distracting",
+        "neutral": "Neutral",
+        "total_time": "Total today",
+        "productive_time": "Productive time",
+        "distracting_time": "Distractions",
+        "focus_score": "Focus score",
+        "last_7_days": "Last 7 days",
+        "by_category": "By category",
+        "current_app": "Currently active",
+        "app": "Application",
+        "category": "Category",
+        "time": "Time",
+        "set_category": "Category for selected app",
+        "work": "Work",
+        "break": "Break",
+        "long_break": "Long break",
+        "start": "Start",
+        "pause": "Pause",
+        "reset": "Reset",
+        "round": "Round",
+        "work_done": "Round finished! Time for a break.",
+        "break_done": "Break is over! Back to work.",
+        "add_goal": "Add goal",
+        "goal_min": "at least",
+        "goal_max": "at most",
+        "minutes_day": "min/day",
+        "delete": "Delete",
+        "appearance": "Appearance",
+        "theme": "Theme",
+        "theme_dark": "Dark",
+        "theme_light": "Light",
+        "language": "Language",
+        "tracking": "Tracking",
+        "tracking_enabled": "Track active windows",
+        "poll_interval": "Poll interval (sec)",
+        "idle_threshold": "Idle threshold (min)",
+        "pomodoro_settings": "Pomodoro",
+        "work_duration": "Work duration (min)",
+        "break_duration": "Break (min)",
+        "long_break_duration": "Long break (min)",
+        "rounds": "Rounds before long break",
+        "notifications": "Notifications",
+        "notifications_enabled": "Show notifications",
+        "distraction_alerts": "Warn about distractions",
+        "distraction_limit": "Distraction limit (min/day)",
+        "general": "General",
+        "autostart": "Launch on system startup",
+        "minimize_to_tray": "Minimize to tray on close",
+        "data": "Data",
+        "export_csv": "Export to CSV",
+        "clear_data": "Clear history",
+        "clear_confirm": "Delete all activity history? This cannot be undone.",
+        "yes": "Yes",
+        "cancel": "Cancel",
+        "exported": "Data exported",
+        "distraction_warning": "You've been distracted for {m} min today. Back to work!",
+        "goal_reached": "Goal reached: {cat} — {m} min!",
+        "restart_hint": "Language change takes effect after restart",
+        "show": "Show",
+        "quit": "Quit",
+        "no_data": "No data yet — work a bit and stats will appear here",
+    },
+}
+
+_lang = "ru"
+
+
+def set_language(lang: str):
+    global _lang
+    _lang = lang if lang in STRINGS else "ru"
+
+
+def tr(key: str, **kwargs) -> str:
+    text = STRINGS[_lang].get(key, key)
+    return text.format(**kwargs) if kwargs else text
+
+
+CATEGORY_KEYS = {"Productive": "productive", "Distracting": "distracting", "Neutral": "neutral"}
+
+
+def category_label(cat: str) -> str:
+    return tr(CATEGORY_KEYS.get(cat, "neutral"))
+
+
+def fmt_duration(seconds: float) -> str:
+    seconds = int(seconds)
+    h, rem = divmod(seconds, 3600)
+    m, s = divmod(rem, 60)
+    if h:
+        return f"{h}ч {m}м" if _lang == "ru" else f"{h}h {m}m"
+    if m:
+        return f"{m}м" if _lang == "ru" else f"{m}m"
+    return f"{s}с" if _lang == "ru" else f"{s}s"

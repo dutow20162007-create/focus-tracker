@@ -1,0 +1,4 @@
+PyQt6>=6.6
+PyQt6-Charts>=6.6
+PyQt6-Fluent-Widgets>=1.11
+psutil>=5.9
